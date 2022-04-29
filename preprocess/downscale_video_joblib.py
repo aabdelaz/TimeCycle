@@ -1,15 +1,8 @@
-import argparse
-import fnmatch
-import glob
-import json
 import os
-import shutil
 import subprocess
-import uuid
 
 from joblib import delayed
 from joblib import Parallel
-import pandas as pd
 
 file_src = 'YOUR_DATASET_FOLDER/manifest.txt'
 folder_path = 'YOUR_DATASET_FOLDER/vlog/'
@@ -35,7 +28,7 @@ def download_clip(inname, outname):
     outname = '"%s"' % outname
     command = "ffmpeg  -loglevel panic -i {} -filter:v scale=\"trunc(oh*a/2)*2:256\" -q:v 1 -c:a copy {}".format( inname, outname)
     try:
-        output = subprocess.check_output(command, shell=True,
+        subprocess.check_output(command, shell=True,
                                          stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as err:
         return status, err.output
@@ -51,11 +44,12 @@ def download_clip_wrapper(row):
     videoname = row
 
     inname = folder_path  + '/' + videoname + '/clip.mp4'
-    outname = output_path + '/' +videoname
+    outname = output_path + '/' + videoname
 
     if os.path.isdir(outname) is False:
         try:
-            os.makedirs( outname, 0755 )
+            os.makedirs(outname,0o0755)
+            os.chmod(outname, 0o0755)
         except:
             print(outname)
 

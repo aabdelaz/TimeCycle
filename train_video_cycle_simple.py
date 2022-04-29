@@ -23,31 +23,22 @@ sys.excepthook = info
 
 import argparse
 import os
-import shutil
 import time
 import random
-
-import numpy as np
-import pickle
-import scipy.misc
 
 import torch
 import torch.nn as nn
 import torch.nn.parallel
 import torch.backends.cudnn as cudnn
 import torch.optim as optim
-import torch.utils.data as data
-import torchvision.transforms as transforms
-import torch.nn.functional as F
 
-import utils.imutils2
 import models.videos.model_simple as models
-from utils import Logger, AverageMeter, mkdir_p, savefig
+from utils import Logger, AverageMeter, mkdir_p
 
 import models.dataset.vlog_train as vlog
 
 params = {}
-params['filelist'] = '/nfs.yoda/xiaolonw/vlog/vlog_frames_12fps.txt'
+params['filelist'] = '../data/vlog/vlog_frames_12fps.txt'
 params['imgSize'] = 256
 params['imgSize2'] = 320
 params['cropSize'] = 240
@@ -282,10 +273,6 @@ def train(train_loader, model, criterion, optimizer, epoch, use_cuda, args):
         img = torch.autograd.Variable(img.cuda())
         patch2 = torch.autograd.Variable(patch2.cuda())
         theta = torch.autograd.Variable(theta.cuda())
-
-        folder_paths = meta['folder_path']
-        startframes = meta['startframe']
-        future_idxs = meta['future_idx']
 
         outputs = model(imgs, patch2, img, theta)
 
