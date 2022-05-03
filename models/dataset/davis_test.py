@@ -2,19 +2,14 @@ from __future__ import print_function, absolute_import
 
 import os
 import numpy as np
-import json
 import random
-import math
 
 import torch
 import torch.utils.data as data
-import random
 
 from utils.imutils2 import *
 from utils.transforms import *
-import torchvision.transforms as transforms
 
-import scipy.io as sio
 import scipy.misc
 
 

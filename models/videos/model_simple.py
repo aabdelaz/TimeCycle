@@ -2,33 +2,21 @@
 
 import torch
 import torch.nn as nn
-from torch.autograd import Variable
 
-import math
 import copy
 import numpy as np
 from . import resnet_res4s1
 from . import inflated_resnet
-import torchvision
 
 import torch.nn.functional as F
 from geotnf.transformation import GeometricTnfAffine
 from geotnf.loss import TransformedGridLoss, WeakInlierCountPool
-from utils.torch_util import expand_dim
-
-import random
-import utils.imutils2
-
-
-import time
-import sys
 
 class CycleTime(nn.Module):
 
     def __init__(self, class_num=8, dim_in=2048, trans_param_num=3, detach_network=False, pretrained=True, temporal_out=4, T=None, hist=1):
         super(CycleTime, self).__init__()
 
-        dim = 512
         print(pretrained)
 
         resnet = resnet_res4s1.resnet50(pretrained=pretrained)
@@ -49,7 +37,6 @@ class CycleTime(nn.Module):
         self.afterconv3_trans = nn.Conv2d(self.spatial_out1 * self.spatial_out1, 128, kernel_size=4, padding=0, bias=False)
         self.afterconv4_trans = nn.Conv2d(128, 64, kernel_size=4, padding=0, bias=False)
 
-        corrdim = 64 * 4 * 4
         corrdim_trans = 64 * 4 * 4
 
         self.linear2 = nn.Linear(corrdim_trans, trans_param_num)
@@ -252,7 +239,6 @@ class CycleTime(nn.Module):
             # global ximg1
             # global patch2
 
-            corr_feat_mats = []
             trans_thetas = []
             trans_feats = []
 
@@ -262,7 +248,6 @@ class CycleTime(nn.Module):
             else:
                 cur_query = init_query
 
-            crops = []
             for t in idx:
 
                 # 1. get affinity of current patch on current frame
@@ -313,8 +298,6 @@ class CycleTime(nn.Module):
             last_ = forw_trans_feats[-1] if len(forw_trans_feats) > 0 else back_trans_feats[0]
             last_corrfeat, last_corrfeat_mat, last_corrfeat_trans, last_trans_theta = self.compute_transform_img_to_patch(
                 F.normalize(last_, p=2, dim=1), img_feat2_norm.unsqueeze(2))
-            last_trans_feat = self.geometricTnf(img_feat2, last_trans_theta)
-            last_trans_feat_norm = F.normalize(last_trans_feat, p=2, dim=1)
 
             forw_trans_thetas.append(last_trans_theta)
 

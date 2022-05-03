@@ -6,34 +6,21 @@ from __future__ import print_function
 
 import argparse
 import os
-import shutil
 import time
 import random
 import cv2
-import imageio
 
 import numpy as np
-import pickle
 import scipy.misc
 
 import torch
-import torch.nn as nn
 import torch.nn.parallel
 import torch.backends.cudnn as cudnn
-import torch.optim as optim
-import torch.utils.data as data
-import torchvision.transforms as transforms
 
 import models.videos.model_test as video3d
 
-from utils import Logger, AverageMeter, mkdir_p, savefig
+from utils import Logger, AverageMeter, mkdir_p
 import models.dataset.davis_test as davis
-
-from geotnf.transformation import GeometricTnf
-
-from scipy.ndimage.morphology import binary_dilation,generate_binary_structure
-import torch.nn.functional as F
-from torch.autograd import Variable
 
 
 params = {}

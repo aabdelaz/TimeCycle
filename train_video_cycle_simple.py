@@ -1,5 +1,5 @@
 '''
-Training wiht VLOG
+Training with VLOG
 '''
 from __future__ import print_function
 
@@ -144,8 +144,6 @@ torch.manual_seed(args.manualSeed)
 if use_cuda:
     torch.cuda.manual_seed_all(args.manualSeed)
 
-best_loss = 0  # best test accuracy
-
 def partial_load(pretrained_dict, model):
     model_dict = model.state_dict()
 
@@ -157,7 +155,6 @@ def partial_load(pretrained_dict, model):
     model.load_state_dict(pretrained_dict)
 
 def main():
-    global best_loss
     start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
     if not os.path.isdir(args.checkpoint):
